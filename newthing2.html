@@ -1,0 +1,197 @@
+<style media="screen">
+  #ACTION_SUBMIT_SURVEY_RESPONSE:disabled {
+    background: gray !important;
+  }
+</style>
+
+
+<div id="survey" class="responsive-form">
+
+  <form action="https://action.lung.org/site/SSurvey" method="post" name="responsiveSurvey" id="responsiveSurvey" class="webform-client-form hideSubmitButton-processed" onsubmit="if (this.verifycheckbox.checked == false) { event.preventDefault(); alert ('You must verify that you are not a robot.'); return false; } else { return true; }">
+    <!-- <form action="https://action.lung.org/site/SSurvey" method="post" name="responsiveSurvey" id="responsiveSurvey" class="webform-client-form hideSubmitButton-processed"> -->
+    <input type="hidden" name="cons_info_component" id="cons_info_component" value="t">
+    <div class="form-item" id="webform-component-firstname">
+      <label for="cons_first_name">First Name:</label>
+      <input type="text" class="form-text required" name="cons_first_name" id="cons_first_name" value="" size="21" maxlength="50" required="" placeholder="required">
+    </div>
+    <div class="form-item" id="webform-component-lastname">
+      <label for="cons_last_name">Last Name:</label>
+      <input type="text" class="form-text required" name="cons_last_name" id="cons_last_name" value="" size="22" maxlength="50" required="" placeholder="required">
+    </div>
+    <div class="form-item" id="webform-component-email">
+      <label for="cons_email">Email:</label>
+      <input type="text" class="form-text required" name="cons_email" id="cons_email" value="" size="45" maxlength="255" required="" placeholder="required">
+    </div>
+    <div class="form-item" id="webform-component-zip">
+      <label for="cons_zip_code">Zip:</label>
+      <input type="text" class="form-text required" name="cons_zip_code" id="cons_zip_code" value="" size="10" maxlength="40" required="" placeholder="required">
+    </div>
+    <div style="display: none;">
+      <input type="hidden" name="cons_mail_opt_in" id="cons_mail_opt_in" value="t">
+      <input type="checkbox" name="cons_email_opt_in" id="cons_email_opt_in">
+      <label for="cons_email_opt_in" class="wrapable"><span class="Explicit">Yes, I would like to receive e-mail from the American Lung Association</span></label>
+      <input type="hidden" id="cons_email_opt_in_requested" name="cons_email_opt_in_requested" value="true">
+      <input type="checkbox" name="cons_postal_opt_in" id="cons_postal_opt_in" checked="checked">
+      <label for="cons_postal_opt_in" class="wrapable"><span class="Explicit">Yes, I would like to receive postal mail from American Lung Association</span></label>
+      <input type="hidden" id="cons_postal_opt_in_requested" name="cons_postal_opt_in_requested" value="true">
+
+      <label for="denySubmit">Spam Control Text:</label>&nbsp;
+      <input type="text" class="form-text required" name="denySubmit" id="denySubmit" value="" alt="This field is used to prevent form submission by scripts.">&nbsp;Please leave this field empty
+    </div>
+    <div class="form-item" id="webform-component-verify-captcha">
+      <div id="edit-submitted-verify-captcha" class="form-checkboxes">
+        <div class="form-item form-type-checkbox form-item-submitted-verify-captcha-yes">
+          <div class="displayinline" id="captcha"></div>
+          <label class="wrapable" for=""><span class="Explicit">I am not a&nbsp;robot.</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="form-item" id="webform-component-comment">
+      <p style="text-align: center;">By clicking Submit you will be signing this letter to Secretary Azar</p>
+    </div>
+    <div class="form-item" id="webform-component-button">
+      <input type="submit" name="ACTION_SUBMIT_SURVEY_RESPONSE" id="ACTION_SUBMIT_SURVEY_RESPONSE" value="Submit" class="form-button button blue" disabled>
+    </div>
+    <input type="hidden" name="SURVEY_ID" id="SURVEY_ID" value="73435">
+    <script language="JavaScript" type="text/javascript">
+      var checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.name = "verifycheckbox";
+      checkbox.value = "1";
+      checkbox.id = "captchaText";
+      checkbox.class = "form-text required";
+      var div = document.getElementById("captcha");
+      div.appendChild(checkbox);
+      checkbox.checked = false;
+    </script>
+  </form>
+</div>
+
+<script src="https://secure3.convio.net/ala/lungforce/drupal/js/jquery.validate.js"></script>
+<script type="text/javascript">
+  var fieldStatus = {
+    first: false,
+    last: false,
+    email: false,
+    zip: false
+  };
+
+
+  // run this at end of each input
+  var evaluateFieldStatus = function() {
+    var permission = 0
+    for (var field in fieldStatus) {
+      if (fieldStatus[field] == false) {
+        permission = permission;
+      } else {
+        permission = permission + 1;
+      }
+    }
+
+    if (permission == 4 && document.getElementById("captchaText").checked ) {
+      document.getElementById("ACTION_SUBMIT_SURVEY_RESPONSE").removeAttribute("disabled");
+      console.log("good!!! enabled.")
+    } else {
+      document.getElementById("ACTION_SUBMIT_SURVEY_RESPONSE").setAttribute("disabled", "disabled");
+      console.log("DISABLED")
+    }
+
+  }
+
+  // captcha
+  document.getElementById("captchaText").addEventListener("change", function(){
+    evaluateFieldStatus();
+  })
+
+
+  //FIRST NAME STUFF
+  function validateFirst(inp) {
+    if (inp.length) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  document.getElementById("cons_first_name").addEventListener("input", function() {
+    var firstVal = document.getElementById("cons_first_name").value;
+    if (validateFirst(firstVal)) {
+      fieldStatus.first = true;
+      console.log("first valid");
+      this.style.borderColor = "#a3a9ac";
+    } else {
+      fieldStatus.first = false;
+      console.log("first invalid");
+      this.style.borderColor = "red";
+    }
+    evaluateFieldStatus();
+  })
+
+  //LAST NAME STUFF
+  function validateLast(inp) {
+    if (inp.length) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  document.getElementById("cons_last_name").addEventListener("input", function() {
+    var firstVal = document.getElementById("cons_last_name").value;
+    if (validateLast(firstVal)) {
+      fieldStatus.last = true;
+      console.log("last valid");
+      this.style.borderColor = "#a3a9ac";
+    } else {
+      fieldStatus.last = false;
+      console.log("last invalid");
+      this.style.borderColor = "red";
+    }
+    evaluateFieldStatus();
+  })
+
+  //EMAIL STUFF
+  function validateEmail(email) {
+    var inp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    // returns true or false
+    return inp.test(email);
+  }
+  document.getElementById("cons_email").addEventListener("input", function() {
+    var emailVal = document.getElementById("cons_email").value;
+    if (validateEmail(emailVal)) {
+      fieldStatus.email = true;
+      console.log("email valid");
+      this.style.borderColor = "#a3a9ac";
+    } else {
+      fieldStatus.email = false;
+      console.log("email invalid");
+      this.style.borderColor = "red";
+    }
+    evaluateFieldStatus();
+  })
+
+
+  // ZIP STUFF
+  function validateZip(zip) {
+    //returns true or false
+    return Boolean(/[0-9]+$/.test(zip) && zip.length == 5)
+  }
+  document.getElementById("cons_zip_code").addEventListener("input", function(){
+    var zipVal = document.getElementById("cons_zip_code").value;
+    if (validateZip(zipVal)) {
+      fieldStatus.zip = true;
+      console.log("zip valid");
+      this.style.borderColor = "#a3a9ac";
+    } else {
+      fieldStatus.zip = false;
+      console.log("zip invalid");
+      this.style.borderColor = "red";
+    }
+    evaluateFieldStatus();
+  })
+
+
+  document.addEventListener("DOMContentLoaded",function() {
+    setTimeout(function() {
+      document.getElementById("cons_email").value = "";
+    }, 2000);
+  });
+</script>
